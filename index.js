@@ -6,6 +6,17 @@ module.exports = function CivilDis(){
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  cdis.shuffle = function (a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+  };
+
   cdis.randomAmount = function(runningTotal, pot, number){
     let dollars = 0;
     let cents = 0;
@@ -39,7 +50,7 @@ module.exports = function CivilDis(){
     let runningTotal = Decimal('0.0');
     
     for(let i = 0; i < number; i++){
-      let item = {index: i, amount: cdis.randomAmount(runningTotal, pot, number)};
+      let item = {amount: cdis.randomAmount(runningTotal, pot, number)};
       runningTotal = runningTotal.add(item.amount);
       items.push(item);
     }
@@ -57,7 +68,7 @@ module.exports = function CivilDis(){
       items[i].amount = item.amount.toNumber();
     }
 
-    return items;
+    return cdis.shuffle(items);
   };
 
   cdis.test = function(items, pot){
@@ -73,7 +84,7 @@ module.exports = function CivilDis(){
     let items = cdis.routine(args.amt, args.num);
     //cli.log(items);
     let success = cdis.test(items, args.amt);
-    cli.log(success);
+    cli.log(items);
     callback();
   };
 
